@@ -1,7 +1,6 @@
 # tvdb-async
 
-Async thetvdb metadata fetching library
-
+Async TVDB metadata fetching library
 
 ### Installation
         
@@ -23,7 +22,7 @@ Async thetvdb metadata fetching library
         OR
         
         
-        $ (sudo) pip install git+https://github.com/kanishka-linux/tvdb_async.git
+        $ (sudo) pip install git+https://github.com/kanishka-linux/tvdb-async.git
         
         
         Note: use 'sudo' depending on whether you want to install package system-wide or not
@@ -32,5 +31,14 @@ Async thetvdb metadata fetching library
 			
 ### Uninstall
 		
-		$ (sudo) pip uninstall tvdb_async (OR pip3 uninstall tvdb_async)
+		$ (sudo) pip uninstall tvdb-async (OR pip3 uninstall tvdb-async)
 		
+
+### Dependencies
+
+1. python 3.5+
+
+2. bs4
+
+3. [vinanti](https://github.com/kanishka-linux/vinanti)
+
