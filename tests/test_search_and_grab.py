@@ -13,7 +13,7 @@ def process_series(tv, *args):
         print(obj.title)
         print('>>>>>>>>>>>>>>>>>>>>>>>>>')
     elif val == 'season-info':
-        print(obj.season_episode_list)
+        print(obj.season_episode_dict)
     elif val == 'info':
         print(obj.summary)
         for i, j in obj.info.items():

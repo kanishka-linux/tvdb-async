@@ -187,7 +187,7 @@ class TVDB:
                     slist.append([k, nsid, num, title, link, dt, img_link])
                     k += 1
             if season.lower() != 'all seasons':
-                obj.season_episode_list.update({sid :[slist.copy(), img_list.copy()]})
+                obj.season_episode_dict.update({sid :[slist.copy(), img_list.copy()]})
             sid += 1
         if season.lower() != 'all seasons':
             obj.season_posters.update({season:img_list})
@@ -293,7 +293,7 @@ class SeriesObject:
         self.summary = ''
         self.info = {}
         self.season_dict = {}
-        self.season_episode_list = {}
+        self.season_episode_dict = {}
         self.episode_summary = {}
         self.season_posters = {}
         self.total = 0
