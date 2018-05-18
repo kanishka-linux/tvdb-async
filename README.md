@@ -46,7 +46,7 @@ Async TVDB metadata fetching library
 
 ### Usage:
     
-    1. Only search for titles if available
+1. Only search for titles if available
         
         from tvdb_async import TVDB
     
@@ -62,7 +62,7 @@ Async TVDB metadata fetching library
         # In above code first argument of callback hello will return
         # dictionary of search result
             
-    2. Search and grab most suitable title from search result
+2. Search and grab most suitable title from search result
         
         from tvdb_async import TVDB
     
@@ -150,7 +150,7 @@ Async TVDB metadata fetching library
         
         tv.getinfo('https://www.thetvdb.com/series/legend-of-the-galactic-heroes', onfinished=hello)
         
-    3. check [tests ](https://github.com/kanishka-linux/tvdb-async/tree/master/tests) folder to know more about api usage
+3. check [tests ](https://github.com/kanishka-linux/tvdb-async/tree/master/tests) folder to know more about api usage
         
 ----------
 
