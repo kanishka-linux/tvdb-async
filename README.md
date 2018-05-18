@@ -1,6 +1,6 @@
 # tvdb-async
 
-Async TVDB metadata fetching library
+Async TVDB metadata fetching library using [vinanti](https://github.com/kanishka-linux/vinanti)
 
 ### Installation
         
