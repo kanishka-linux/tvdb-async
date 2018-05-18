@@ -39,6 +39,7 @@ class TestTVDB(unittest.TestCase):
         tv.search('x', onfinished=partial(process_series, tv))
         tv.search('aria the animation', onfinished=partial(process_series, tv))
         tv.search('nichijou', onfinished=partial(process_series, tv))
+        tv.search('legend of the galactic heroes', onfinished=partial(process_series, tv))
         
     
 if __name__ == '__main__':

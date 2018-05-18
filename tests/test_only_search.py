@@ -14,6 +14,7 @@ class TestTVDB(unittest.TestCase):
         tv.search('x', onfinished=search_finished)
         tv.search('aria the animation', onfinished=search_finished)
         tv.search('nichijou', onfinished=search_finished)
+        tv.search('legend of the galactic heroes', onfinished=search_finished)
     
 if __name__ == '__main__':
     BASEDIR, BASEFILE = os.path.split(os.path.abspath(__file__))
