@@ -17,12 +17,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with tvdb-async.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import platform
 from setuptools import setup
 
 """
  GNU/Linux users should install dependencies manually using their native
  package manager
 """
+
+if platform.system().lower() == 'linux':
+    install_dependencies = []
+else:
+    install_dependencies = ['bs4', 'vinanti']
 
 setup(
     name='tvdb-async',
@@ -34,6 +40,6 @@ setup(
     long_description="README.md",
     packages=['tvdb_async'],
     include_package_data=True,
-    install_requires = ['bs4', 'vinanti'],
+    install_requires = install_dependencies,
     description="Async tvdb metadata fetching library",
 )
