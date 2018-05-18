@@ -125,31 +125,32 @@ Async TVDB metadata fetching library using [vinanti](https://github.com/kanishka
                 
                 print(val)
             
+        if __name__ == '__main__':
         
-        # initialize TVDB and grab most appropriate entry from search results.
-        
-        tv = TVDB(lang='en', search_and_grab=True) 
-        
-        # initialize TVDB and grab most appropriate entry from search results,
-        # along with episode summary of each individual episode.
-        
-        tv = TVDB(lang='en', search_and_grab=True, episode_summary=True)
-        
-        
-        # initialize TVDB same as above, but wait for 0.2 seconds before making
-        # consecutive requests. This wait field is very important, as it limits
-        # http requests. So always use it with some rational value.
-        
-        tv = TVDB(lang='en', search_and_grab=True, episode_summary=True, wait=0.2)
-        
-        #finally search 
-        
-        tv.search('legend of the galactic heroes', onfinished=hello)
-        
-        # directly use already available url
-        
-        tv.getinfo('https://www.thetvdb.com/series/legend-of-the-galactic-heroes', onfinished=hello)
-        
+            # initialize TVDB and grab most appropriate entry from search results.
+            
+            tv = TVDB(lang='en', search_and_grab=True) 
+            
+            # initialize TVDB and grab most appropriate entry from search results,
+            # along with episode summary of each individual episode.
+            
+            tv = TVDB(lang='en', search_and_grab=True, episode_summary=True)
+            
+            
+            # initialize TVDB same as above, but wait for 0.2 seconds before making
+            # consecutive requests. This wait field is very important, as it limits
+            # http requests. So always use it with some rational value.
+            
+            tv = TVDB(lang='en', search_and_grab=True, episode_summary=True, wait=0.2)
+            
+            #finally search 
+            
+            tv.search('legend of the galactic heroes', onfinished=hello)
+            
+            # directly use already available url
+            
+            tv.getinfo('https://www.thetvdb.com/series/legend-of-the-galactic-heroes', onfinished=hello)
+            
 3. check [tests ](https://github.com/kanishka-linux/tvdb-async/tree/master/tests) folder to know more about api usage
         
 ----------
