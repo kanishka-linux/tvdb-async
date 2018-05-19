@@ -23,22 +23,29 @@ from vinanti import Vinanti
 from bs4 import BeautifulSoup
 try:
     from tvdb_async.deco import *
+    from tvdb_async.backend import Backend
     from tvdb_async.log import log_function
 except ImportError:
     from deco import *
+    from backend import Backend
     from log import log_function
 logger = log_function(__name__)
 
 
 class TVDB:
     
-    def __init__(self, base_url=None, lang='en', wait=None, episode_summary=False, search_and_grab=False):
+    def __init__(self, base_url=None, lang='en', wait=None,
+                 episode_summary=False, search_and_grab=True,
+                 backend=None, hdrs=None):
         if not base_url:
             self.base_url = 'https://www.thetvdb.com'
         else:
             self.base_url = base_url
         self.language = lang
-        self.hdrs = {'User-Agent':'Mozilla/5.0'}
+        if hdrs:
+            self.hdrs = hdrs
+        else:
+            self.hdrs = {'User-Agent':'Mozilla/5.0'}
         if isinstance(wait, int) or isinstance(wait, float):
             self.vnt = Vinanti(block=False, hdrs=self.hdrs, wait=wait, timeout=10)
         else:
@@ -50,11 +57,34 @@ class TVDB:
         self.time = time.time()
         self.ep_summary = episode_summary
         self.search_and_grab = search_and_grab
+        self.backend = Backend(hdrs)
+        self.backend_search = backend
+    
+    def find_redirected_link(self, *args):
+        result = args[-1].result()
+        url = result.url
+        self.getinfo(url, onfinished=args[0])
         
-    def search(self, srch, onfinished=None):
-        base_url = 'https://www.thetvdb.com/search'
-        params = {'q':srch,'l':self.language}
-        self.vnt.get(base_url, params=params, onfinished=partial(self.process_search, onfinished, srch))
+    def search_with_backend(self, links, *args):
+        if links:
+            link = links[0]
+            if 'tab=series' in link:
+                new_args = args[:-3]
+                self.vnt.head(link, onfinished=partial(self.find_redirected_link, *new_args))
+        
+    
+    def search(self, srch, backend=None, onfinished=None):
+        if srch.startswith('http'):
+            self.getinfo(srch, onfinished=onfinished)
+        else:
+            if backend in ['g', 'ddg']:
+                self.backend.search(srch, backend, self.search_with_backend, onfinished, srch)
+            elif self.backend_search and backend != 'no':
+                self.backend.search(srch, self.backend_search, self.search_with_backend, onfinished, srch)
+            else:
+                base_url = 'https://www.thetvdb.com/search'
+                params = {'q':srch}
+                self.vnt.get(base_url, params=params, onfinished=partial(self.process_search, onfinished, srch))
     
     def getinfo(self, url, onfinished=None):
         self.final_dict.update({url:SeriesObject(url)})
@@ -237,6 +267,9 @@ class TVDB:
         original_network = None
         start_date = None
         end_date = None
+        min_val = None
+        min_dict = {'final':None}
+        min_index = 0
         for i, tr in enumerate(soup.findAll('tr')):
             for j, td in enumerate(tr.findAll('td')):
                 if j == 0:
@@ -246,6 +279,15 @@ class TVDB:
                         txt = td.text
                         if txt.lower() == srch.lower():
                             exact_found = True
+                        else:
+                            dist = self.levenshtein(txt.lower(), srch.lower())
+                            if not min_val:
+                                min_val = dist
+                                min_index = i
+                            else:
+                                if min_val > dist:
+                                    min_val = dist
+                                    min_index = i
                         href = td.find('a')['href']
                         title_text = txt
                         title_link = self.base_url + href
@@ -259,29 +301,47 @@ class TVDB:
                     start_date = td.text
                 elif j == 6:
                     end_date = td.text
+            arg_list = [
+                title_text, title_link, tvdb_id, status,
+                original_network, start_date, end_date, lang
+                ]
             if exact_found:
                 search_dict.clear()
-                search_dict.update(
-                        {0:[
-                            title_text, title_link, tvdb_id, status,
-                            original_network, start_date, end_date, lang
-                            ]
-                        }
-                    )
+                search_dict.update({0:arg_list.copy()})
                 break
             elif title_link is None:
                 pass
             else:
-                search_dict.update(
-                        {i:[
-                            title_text, title_link, tvdb_id, status,
-                            original_network, start_date, end_date, lang
-                            ]
-                        }
-                    )
-        return search_dict, self.search_and_grab
-            
+                search_dict.update({i:arg_list.copy()})
+                if min_index == i:
+                    min_dict.clear()
+                    min_dict = {i:arg_list.copy()}
+        if exact_found:
+            return search_dict, self.search_and_grab
+        else:
+            return min_dict, self.search_and_grab
+    
+    #https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Python
+    
+    def levenshtein(self, s1, s2):
+        if len(s1) < len(s2):
+            return self.levenshtein(s2, s1)
 
+        # len(s1) >= len(s2)
+        if len(s2) == 0:
+            return len(s1)
+
+        previous_row = range(len(s2) + 1)
+        for i, c1 in enumerate(s1):
+            current_row = [i + 1]
+            for j, c2 in enumerate(s2):
+                insertions = previous_row[j + 1] + 1 # j+1 instead of j since previous_row and current_row are one character longer
+                deletions = current_row[j] + 1       # than s2
+                substitutions = previous_row[j] + (c1 != c2)
+                current_row.append(min(insertions, deletions, substitutions))
+            previous_row = current_row
+        
+        return previous_row[-1]
 
 class SeriesObject:
     
