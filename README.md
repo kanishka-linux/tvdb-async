@@ -45,24 +45,8 @@ Async TVDB metadata fetching library using [vinanti](https://github.com/kanishka
 ----------
 
 ### Usage:
-    
-1. Only search for titles if available
-        
-        from tvdb_async import TVDB
-    
-        def hello(*args):
-            # here args[0] will hold dictionary of search results
-            # print args to know more about arguments
-            print(args) 
             
-        tv = TVDB(lang='en')
-        
-        tv.search('legend of the galactic heroes', onfinished=hello)
-        
-        # In above code first argument of callback hello will return
-        # dictionary of search result
-            
-2. Search and grab most suitable title from search result
+1. Search and grab most suitable title from search result
         
         from tvdb_async import TVDB
     
@@ -129,19 +113,19 @@ Async TVDB metadata fetching library using [vinanti](https://github.com/kanishka
         
             # initialize TVDB and grab most appropriate entry from search results.
             
-            tv = TVDB(lang='en', search_and_grab=True) 
+            tv = TVDB(lang='en') 
             
             # initialize TVDB and grab most appropriate entry from search results,
             # along with episode summary of each individual episode.
             
-            tv = TVDB(lang='en', search_and_grab=True, episode_summary=True)
+            tv = TVDB(lang='en', episode_summary=True)
             
             
             # initialize TVDB same as above, but wait for 0.2 seconds before making
             # consecutive requests. This wait field is very important, as it limits
             # http requests. So always use it with some rational value.
             
-            tv = TVDB(lang='en', search_and_grab=True, episode_summary=True, wait=0.2)
+            tv = TVDB(lang='en', episode_summary=True, wait=0.2)
             
             #finally search 
             
@@ -149,7 +133,15 @@ Async TVDB metadata fetching library using [vinanti](https://github.com/kanishka
             
             # directly use already available url
             
-            tv.getinfo('https://www.thetvdb.com/series/legend-of-the-galactic-heroes', onfinished=hello)
+            tv.search('https://www.thetvdb.com/series/legend-of-the-galactic-heroes', onfinished=hello)
+            
+            # Use google as search engine backend
+            
+            tv.search('legend of the galactic heroes', backend='g', onfinished=hello)
+            
+            # Use duckduckgo as search engine backend
+            
+            tv.search('legend of the galactic heroes', backend='ddg', onfinished=hello)
             
 3. check [tests ](https://github.com/kanishka-linux/tvdb-async/tree/master/tests) folder to know more about api usage
         
