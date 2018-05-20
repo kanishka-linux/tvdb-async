@@ -10,7 +10,7 @@ def search_finished(*args):
 class TestTVDB(unittest.TestCase):
         
     def test_only_search(self):
-        tv = TVDB(lang='en', wait=0.2)
+        tv = TVDB(lang='en', wait=0.2, search_and_grab=False)
         tv.search('x', onfinished=search_finished)
         tv.search('aria the animation', onfinished=search_finished)
         tv.search('nichijou', onfinished=search_finished)
