@@ -238,7 +238,7 @@ class TVDB:
     def process_episodes(self, *args):
         ourl = args[1]
         result = args[-1]
-        if args[-1].exception():
+        if not args[-1]:
             obj = None
         else:
             obj = self.final_dict[ourl]
