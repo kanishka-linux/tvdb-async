@@ -49,10 +49,12 @@ Async TVDB metadata fetching library using [vinanti](https://github.com/kanishka
 1. Search and grab most suitable title from search result
         
         from tvdb_async import TVDB
-    
+        
+        # This is callback function, from which one will get information.
+        
         def hello(*args):
         
-            #This function will return metadata asynchronously as it is available
+            # This function will return metadata asynchronously as it is available
             # here args[0] will hold tvdb series object
             # And args[1] will hold type of information that has been returned
             # print args to know more about arguments
